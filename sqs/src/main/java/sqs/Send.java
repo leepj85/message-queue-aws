@@ -26,9 +26,9 @@ public class Send {
         .withQueueUrl(queueUrl)
         .withEntries(
             new SendMessageBatchRequestEntry(
-                "msg_1", "Hey meatbag <3 Bender"),
+                "msg_1", "Hello, AWS World."),
             new SendMessageBatchRequestEntry(
-                "msg_2", "Hello friends <3 Zoidberg")
+                "msg_2", "Goodbye, AWS World.")
                 .withDelaySeconds(10));
     sqs.sendMessageBatch(send_batch_request);
   }
