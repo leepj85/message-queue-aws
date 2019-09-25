@@ -1,28 +1,29 @@
 package sqs;
 
+import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.Message;
 
 import java.util.List;
 
-public class Receive {
+public class Receive implements RequestHandler<SQSEvent, Void> {
+
   private static final String QUEUE_NAME = "QueueA";
 
-  public static void receive(){
-    final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
-    String queueUrl = sqs.getQueueUrl(QUEUE_NAME).getQueueUrl();
+  @Override
+  public Void handleRequest(SQSEvent input, Context context) {
+        final AmazonSQS sqs = AmazonSQSClientBuilder.defaultClient();
+        String queueUrl = sqs.getQueueUrl(QUEUE_NAME).getQueueUrl();
+        LambdaLogger logger = context.getLogger();
 
-    // receive messages from the queue
-    List<Message> messages = sqs.receiveMessage(queueUrl).getMessages();
-
-    for (Message m : messages) {
-      System.out.println(m);
-    }
-
-    // delete messages from the queue
-    for (Message m : messages) {
-      sqs.deleteMessage(queueUrl, m.getReceiptHandle());
-    }
+        for (SQSEvent.SQSMessage m : input.getRecords()) {
+          logger.log(m.getBody());
+          System.out.println(new String(m.getBody()));
+        }
+    return null;
   }
 }
