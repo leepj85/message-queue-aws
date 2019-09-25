@@ -1,6 +1,7 @@
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
+    id 'application'
 }
 repositories {
     // Use jcenter for resolving dependencies.
@@ -30,3 +31,7 @@ build.dependsOn buildZip
 //apply plugin: 'java'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+application {
+    mainClassName = 'sqs.App'
+}
